@@ -1,0 +1,23 @@
+.new-blog-btn-container,
+.close-blog-btn-container {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.new-blog-btn {
+    color: rgb(18, 18, 201);
+    background-color: transparent;
+    font-size: 22px;
+}
+
+.close-blog-btn {
+    background-color: cornflowerblue;
+}
+
+.new-blog-btn:hover {
+    color: rgb(90, 17, 158);
+    background-color: aquamarine;
+}
+

@@ -6,7 +6,7 @@
 }
 
 .header-container {
-    padding: 20px;
+    padding: 20px 50px;
     background-color: #8EC5FC;
     background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
     display:flex;
@@ -16,29 +16,36 @@
 
 .header-menu {
     display: flex;
-    gap: 8px;
+    gap: 14px;
 }
 
 .logout-btn {
+    padding: 0;
     border: none;
     background-color: transparent;
     font-size: 16px;
+    color: black;
 }
 
 .logout-btn:hover {
     text-decoration: underline;
-    color:rgb(7, 7, 204)
+    color:rgb(7, 7, 204);
+    background-color: transparent;
 }
 
 
 button {
-    padding: 0px 6px;
+    padding: 4px 8px;
     cursor: pointer;
-    border: 1px solid darkblue;
-    border-radius: 0.2rem;
-    color: black;
-    background-color: whitesmoke;
+    border: none;
+    color: white;
+    background-color: #4CAF50;
     font-weight: 800;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: rgb(156, 183, 233);
 }
 
 a { color: rgb(106, 106, 173); }
@@ -49,4 +56,17 @@ a:hover { color: orange; }
     text-align: center;
     margin-bottom: 15px;
     margin-top: 15px;
+}
+
+.body-title {
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+hr{
+    height: 2px;
+    background-color: rgb(55, 7, 228);
+    border: none;
 }

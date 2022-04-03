@@ -59,23 +59,23 @@ const Form = ({ createBlog }) => {
       <div className='form-body'>
         <form onSubmit={addBlog}>
           <div>
-              TITLE <input value={newTitle} onChange={handleTitle}/>
+              TITLE <input id='title' title='title' value={newTitle} onChange={handleTitle}/>
           </div>
           <div>
-              AUTHOR <input value={newAuthor} onChange={handleAuthor}/>
+              AUTHOR <input id='author' value={newAuthor} onChange={handleAuthor}/>
           </div>
           <div>
-              LINK <input value={newUrl} onChange={handleUrl}/>
+              LINK <input id='url' value={newUrl} onChange={handleUrl}/>
           </div>
           <div>
-              LIKES <input value={newLikes} onChange={handleLikes}/>
+              LIKES <input id='likes' value={newLikes} onChange={handleLikes}/>
           </div>
           <div>
               STATUS <select value={newStatus} onChange={handleStatus}>
               <option value data-isdefault="true">-- Select --</option>
               <option value="Read">Read</option>
               <option value="Non Read">Non Read</option>
-            </select> <button className="submit-btn" type="submit">Save</button>
+            </select> <button id='save-button' className="submit-btn" type="submit">Save</button>
           </div>
         </form>
       </div>

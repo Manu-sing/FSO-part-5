@@ -1,6 +1,6 @@
 .new-blog-btn-container,
 .close-blog-btn-container {
-    padding: 20px;
+    margin: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,11 +13,14 @@
 }
 
 .close-blog-btn {
-    background-color: cornflowerblue;
+    padding: 2px 6px;
+}
+
+.close-blog-btn:hover {
+    background-color: rgb(156, 183, 233);
 }
 
 .new-blog-btn:hover {
-    color: rgb(90, 17, 158);
-    background-color: aquamarine;
+    background-color: rgb(193, 235, 220);
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import ErrorMessage from './components/ErrorMessage'
@@ -9,13 +9,20 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Form from './components/Form'
 import Togglable from './components/Togglable'
+import RegistrationForm from './components/RegistrationForm'
+import registrationService from './services/registration'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [usernameForRegistration, setUsernameForRegistration] = useState('')
+  const [nameForRegistration, setNameForRegistration] = useState('')
+  const [passwordForRegistration, setPasswordForRegistration] = useState('')
   const [message, setMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [loginErrorMessage, setLoginErrorMessage] = useState('')
+  const [registrationErrorMessage, setRegistrationErrorMessage] = useState('')
   const [user, setUser] = useState(null)
   const [showAll, setShowAll] = useState(true)
 
@@ -38,13 +45,14 @@ const App = () => {
   const addBlog = (blogObject) => {
 
     if(blogObject.title === '' || blogObject.author === '' || blogObject.url === '') {
-      alert('The fields "title", "author" and "url" must be provided.')
+      alert('THE FIELDS "TITLE", "AUTHOR" AND "URL"MUST BE PROVIDED.')
     } else {
+      blogFormRef.current.toggleVisibility()
       blogService
         .create(blogObject)
         .then(returnedBlog => {
           setBlogs(blogs.concat(returnedBlog))
-          setMessage('The article was succesfully added to the list.')
+          setMessage('THE ARTICLE WAS SUCCESFULLY ADDED TO THE LIST.')
           setTimeout(() => {
             setMessage(null)
           }, 4000)
@@ -75,22 +83,31 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      resetLoginForm()
+      blogFormRef.current.toggleVisibility()
     } catch (exception) {
-      setErrorMessage('Wrong username or password')
+      resetLoginForm()
+      setLoginErrorMessage('USERNAME AND PASSWORD MUST BE PROVIDED AND MUST BE AT LEAST 3 CHARACTERS LONG. USERNAME MUST BE UNIQUE.')
       setTimeout(() => {
-        setErrorMessage(null)
+        setLoginErrorMessage(null)
       }, 5000)
     }
+
+  }
+
+  const resetLoginForm = () => {
+    setUsername('')
+    setPassword('')
   }
 
   const blogsToShow = showAll
     ? blogs
     : blogs.filter(blog => blog.status === 'Non Read')
 
+
+
   const loginForm = () => (
-    <div>
+    <Togglable buttonLabel='Login' ref={blogFormRef}>
       <LoginForm
         handleLogin={handleLogin}
         password={password}
@@ -98,21 +115,84 @@ const App = () => {
         username={username}
         handleUsername={handleUsername}
       />
-    </div>
+    </Togglable>
   )
 
+  const handleUsernameForRegistration = (e) => {
+    setUsernameForRegistration(e.target.value)
+  }
+
+  const handleNameForRegistration = (e) => {
+    setNameForRegistration(e.target.value)
+  }
+
+  const handlePasswordForRegistration = (e) => {
+    setPasswordForRegistration(e.target.value)
+  }
+
+  const handleRegistration = async (e) => {
+    e.preventDefault()
+    const newUser = {
+      username: usernameForRegistration,
+      name: nameForRegistration,
+      password: passwordForRegistration
+    }
+
+    registrationService
+      .registration(newUser)
+      .then(() => {
+        alert('YOU HAVE SUCCESSFULLY SIGNED-IN. CLICK LOGIN, ENTER YOUR CREDENTIALS AND ENJOY USING THE APP!')
+        setTimeout(() => {
+          setMessage(null)
+        }, 4000)
+        resetRegistrationForm()
+        blogFormRef.current.toggleVisibility()
+      })
+      .catch(() => {
+        resetRegistrationForm()
+        setRegistrationErrorMessage('USERNAME AND PASSWORD MUST BE PROVIDED AND BE AT LEAST 3 CHARACTERS LONG.')
+        setTimeout(() => {
+          setRegistrationErrorMessage(null)
+        }, 4000)
+      })
+  }
+
+  const resetRegistrationForm = () => {
+    setUsernameForRegistration('')
+    setNameForRegistration('')
+    setPasswordForRegistration('')
+  }
+
+  const registrationForm = () => (
+    <Togglable buttonLabel='Sign-in' ref={blogFormRef}>
+      <RegistrationForm
+        handleRegistration={handleRegistration}
+        usernameForRegistration={usernameForRegistration}
+        handleUsernameForRegistration={handleUsernameForRegistration}
+        nameForRegistration={nameForRegistration}
+        handleNameForRegistration={handleNameForRegistration}
+        passwordForRegistration={passwordForRegistration}
+        handlePasswordForRegistration={handlePasswordForRegistration}
+      />
+    </Togglable>
+  )
+
+  const blogFormRef = useRef()
+
   const blogForm = () => (
-    <Togglable buttonLabel='Add New blog'>
+    <Togglable buttonLabel='Add New Blog' ref={blogFormRef}>
       <Form createBlog={addBlog}/>
     </Togglable>
   )
+
 
   const handleLogout = async () => {
     await window.localStorage.clear()
     setUser(null)
     setTimeout(() => {
-      alert(`'${user.name}' has successfully logged out.`)
+      alert('YOU HAVE SUCCESSFULLY LOGOUT.')
     }, 100)
+
   }
 
   const toggleStatus = (id) => {
@@ -124,7 +204,7 @@ const App = () => {
       .update(id,toggledBlog)
       .then(returnedBlog => {
         setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
-        setMessage('The status of the article was succesfully updated.')
+        setMessage('THE STATUS OF THE ARTICLE WAS SUCCESFULLY UPDATED.')
         setTimeout(() => {
           setMessage(null)
         }, 4000)
@@ -132,7 +212,6 @@ const App = () => {
   }
 
   const addALike = (id) => {
-    console.log(`We need to add a like to the blog with id ${id}`)
     const blogToAddaLikeTo = blogs.find(n => n.id === id)
     const editedBlog = { ...blogToAddaLikeTo, likes: blogToAddaLikeTo.likes + 1 }
 
@@ -151,13 +230,13 @@ const App = () => {
         .removeBlog(id)
         .then(() => {
           setBlogs(blogs.filter(blog => blog.id !== id))
-          setMessage(`The article "${blogToDelete.title}" was succesfully deleted.`)
+          setMessage(`The article "${blogToDelete.title}" was succesfully deleted from the list.`)
           setTimeout(() => {
             setMessage(null)
           }, 4000)
         })
         .catch(() => {
-          console.log('Deletion failed')
+          alert('YOU CAN ONLY DELETE AN ENTRY IF YOU CREATED IT.')
         })
     }
   }
@@ -167,7 +246,7 @@ const App = () => {
     <div>
       <div className='header-container'>
         <Header
-          text='MY FAVORITE BLOGS'
+          text='BLOG APP'
           user={user}
           handleLogout={handleLogout}
         />
@@ -176,11 +255,21 @@ const App = () => {
         {user === null ?
           <div>
             {loginForm()}
-            <ErrorMessage errorMessage={errorMessage}/>
+            <ErrorMessage errorMessage={loginErrorMessage}/>
+            {registrationForm()}
+            <ErrorMessage errorMessage={registrationErrorMessage}/>
           </div> :
           <div>
             {blogForm()}
             <hr/>
+            <div className='body-title'>
+              <div>
+                <h1>LIST OF YOUR FAVORITE ARTICLES</h1>
+              </div>
+              <div>
+                <p><strong>(from most to least liked)</strong></p>
+              </div>
+            </div>
             <div className='filter'>
               {!blogs.length ?
                 null :

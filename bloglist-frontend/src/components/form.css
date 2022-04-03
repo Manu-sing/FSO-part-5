@@ -1,5 +1,6 @@
 .form-container, 
-.loginForm-container {
+.loginForm-container,
+.registrationForm-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,7 +16,8 @@ form {
 }
 
 .submit-btn, 
-.login-btn {
+.login-btn,
+.registration-btn {
     font-size: 16px;
 }
 
@@ -25,4 +27,5 @@ input, select {
     height: 23px;
     padding: 2px 5px;
 }
+
 

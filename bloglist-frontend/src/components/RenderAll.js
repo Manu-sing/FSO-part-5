@@ -6,7 +6,7 @@ const RenderAll = ({ blogs, toggleStatus, addALike, handleDelete }) => {
   let mostLikesToLeastLikes = blogs.sort((a, b) => b.likes - a.likes)
   return (
     <div className='grid'>
-      {mostLikesToLeastLikes.map(blog =>
+      {mostLikesToLeastLikes.map((blog) =>
         <RenderSingle
           key={blog.id}
           title={blog.title}

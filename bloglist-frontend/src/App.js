@@ -45,7 +45,7 @@ const App = () => {
   const addBlog = (blogObject) => {
 
     if(blogObject.title === '' || blogObject.author === '' || blogObject.url === '') {
-      alert('THE FIELDS "TITLE", "AUTHOR" AND "URL"MUST BE PROVIDED.')
+      alert('THE FIELDS "TITLE", "AUTHOR" AND "URL" MUST BE PROVIDED.')
     } else {
       blogFormRef.current.toggleVisibility()
       blogService
@@ -219,6 +219,10 @@ const App = () => {
       .update(id, editedBlog)
       .then(returnedBlog => {
         setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+        setMessage('YOU SUCCESFULLY ADDED A NEW LIKE TO THE ARTICLE.')
+        setTimeout(() => {
+          setMessage(null)
+        }, 4000)
       })
   }
 
